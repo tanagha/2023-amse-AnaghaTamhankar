@@ -2,59 +2,49 @@
 
 ## Summary
 <!-- Describe your data science project in max. 5 sentences. -->
-The dataset on bicycle streets in each district, together with other pertinent data, will be used in the project to examine the bicycle infrastructure in Cologne. The goal of the project is to shed light on the efficiency and use of bicycle infrastructure, point out potential areas for improvement, and comprehend the relationship between bicycle streets, motor vehicle traffic, and the predominance of bicycle traffic.
+To increase traffic efficiency and safety, this data science project will examine Cologne's traffic violations and light positions. We can pinpoint regions with a high number of violations and look into possible changes in traffic signal layout by merging reported fines data from the year 2021(past datasets are also available from 2015 but for now we are only using 2021) with the dataset of traffic lights in Cologne. Data integration, exploratory data analysis, and the creation of conclusions and suggestions are all parts of the project.
 
 ## Rationale
 <!-- Outline the impact of the analysis, e.g. which pains it solves. -->
-For the purpose of increasing eco-friendly transportation and enhancing the overall cycling experience, a review of the city of Cologne's bicycle infrastructure is important. The project can pinpoint regions where infrastructure improvements may be necessary by assessing the existing state of bicycle roadways in various districts and their impact on motor vehicle traffic and bicycle traffic preponderance. This analysis can aid in making well-informed choices for improving bicycle infrastructure, focusing investments, and promoting active transportation options by municipal planners, lawmakers, and transportation authorities.
+The following concerns are addressed in this analysis:
+1. Determine high-traffic locations so that you can concentrate your enforcement efforts there and increase road safety.
+2. To evaluate the effectiveness of traffic signal placement, look at the relationship between the occurrence of infractions and the presence of traffic lights.
+3. Find potential locations for the installation of extra traffic lights to improve traffic flow and decrease infractions.
+The project intends to deliver practical insights that may be utilized to make data-driven decisions for enhancing traffic management and safety in Cologne by merging the information and doing a thorough analysis.
 
 ## Datasources
 <!-- Describe each datasources you plan to use in a section. Use the prefic "DatasourceX" where X is the id of the datasource. -->
 
-### Datasource4167135070585053422: Cycle streets in Cologne
-* Metadata URL: https://mobilithek.info/offers/-4167135070585053422
-* Data URL: https://offenedaten-koeln.de/sites/default/files/Fahrradstra%25C3%259Fen_Koeln.csv
+### Datasource5645705113511462355: Ampelanlagen Koeln (Traffic lights in Cologne)
+* Metadata URL: https://mobilithek.info/offers/-5645705113511462355
+* Data URL: https://offenedaten-koeln.de/sites/default/files/2023_LSA_Koeln.csv
+            https://offenedaten-koeln.de/sites/default/files/20181116_LSA_Ko%25CC%2588ln.csv
+            https://offenedaten-koeln.de/sites/default/files/20131118_lsa_koordinaten_wgs84.csv
 * Data Type: CSV
 
 Short description:
-Bicycle streets in Cologne by district.
-Attributes:
-- City district 
-- Street from/to 
-- Motor vehicle traffic permitted 
-- Set up since 
-- Bicycle traffic predominates 
-- Other remarks 
-- Length
+Traffic lights (traffic lights) in Cologne (location, LSA number, building authority and district).
+
+Additional information: These are the locations of traffic lights. The localization reflects the relevant crossing point of traffic flows, the location controlled by a control device of a traffic light system. The scope of control of an installation can cover a larger area up to 75 m away from this point.
+
+The source of the data is the inventory of traffic signals at the Office for Traffic Management. The data is updated at the beginning of each year. 
 
 
-### Datasource7728616938658132563: Traffic volume in the city of Cologne
-* Metadata URL: https://mobilithek.info/offers/-7728616938658132563
-* Data URL: https://offenedaten-koeln.de/dataset/resource/90e5fad9-fd9f-4e7d-8e3d-934eb7dc1d34
-* Data Type: JSON
+### Datasource6868803491867755462: Bußgelddaten Koeln (Fine data Cologne)
+* Metadata URL: https://mobilithek.info/offers/-6868803491867755462
+* Data URL: https://offenedaten-koeln.de/sites/default/files/Bussgeld_2021.csv
+* Data Type: CSV
 
 Short description:
-The data in the traffic calendar gives you various options for getting an overview of the traffic situation in Cologne.
-Here you can get information about how traffic works on Cologne's main streets.
-[identifier] => ID Bsp.: ST035
-[name] => name - eg: belt - A 57 - exit Ehrenfeld to Aachener Straße
-[utilization] => utilization - example (0,1 or 2) 0 = free 1 = slow-moving 2 = traffic jam 16 = no display, probably due to defective sensors 32 = additional information in the link field (e.g. for major events)
-[link] => link - e.g. link to further information
-[geometryType] => esriGeometryPolyline [spatialReference] => stdClass Object
-The update times are around 5 to 10 minutes.
-
+Recorded fines from 2021, including by date, street, vehicle type and offense.
 
 ## Work Packages
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
-
-1. [Issue #1]: Obtain and preprocess the dataset on bicycle streets in Cologne by district.
-2. [Issue #2]: Gather traffic volume, traffic density, and traffic load data for the corresponding streets.
-3. [Issue #3]: Conduct descriptive statistics and visualizations to understand the distribution of bicycle streets, motor vehicle traffic, and bicycle traffic predominance.
-4. [Issue #4]: Perform correlation analysis between bicycle streets, motor vehicle traffic, and bicycle traffic predominance.
-5. [Issue #5]: Identify districts or streets with high motor vehicle traffic but inadequate bicycle infrastructure.
-6. [Issue #6]: Determine areas where bicycle traffic predominance can be improved through infrastructure enhancements.
-7. [Issue #7]: Summarize the analysis results and key findings.
-8. [Issue #8]: Provide recommendations for improving bicycle infrastructure in different districts.
-9. [Issue #9]: Prepare a detailed report outlining the analysis methodology, results, and recommendations.
+    [Issue #1] Obtain and preprocess the dataset on fines with the dataset of traffic lights in Cologne.
+    [Issue #2] Handle inconsistent or missing data to ensure data quality and suitability for additional analysis.
+    [Issue #3] Conduct descriptive statistics and visualizations.
+    [Issue #4] Examine the connection between the frequency of crimes and the presence of traffic signals.
+    [Issue #5] Find out where there are a lot of infractions happening, then evaluate how well the traffic lights that are already there are working there.
+    [Issue #6] Make suggestions for concentrated enforcement measures, possible changes to traffic signal locations, and locations where more traffic lights could be useful.
 
 [i1]: https://github.com/jvalue/2023-amse-template/issues/1
