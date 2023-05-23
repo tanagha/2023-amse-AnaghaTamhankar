@@ -4,14 +4,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.sqlite import REAL as SQLiteReal
 from sqlalchemy.orm import sessionmaker
 
-# Create the engine and session
-engine = create_engine('sqlite:///airports.sqlite')
-Session = sessionmaker(bind=engine)
-session = Session()
+# Set up the Engine and the Session
+liteEngine = create_engine('sqlite:///airports.sqlite')
+sessionCreate = sessionmaker(bind=liteEngine)
+sessionObj = sessionCreate()
 
 # Create a base class for declarative models
 Base = declarative_base()
 
+#Create the ORM Model
 class Airport(Base):
     __tablename__ = 'airports'
     column_1 = Column(Integer)
@@ -29,15 +30,21 @@ class Airport(Base):
     geo_punkt = Column(String)
     __mapper_args__ = { 'primary_key': [column_1, column_2]}
     
-Base.metadata.create_all(engine)
+# Create the table    
+Base.metadata.create_all(liteEngine)
 
+# Fetch and Read the Data
 url = "https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/rhein-kreis-neuss-flughafen-weltweit/exports/csv"
-df = pd.read_csv(url, delimiter= ";")
+airportDf = pd.read_csv(url, delimiter= ";")
 
-records = df.to_dict(orient='records')
+# Create a list of dictionaries
+records = airportDf.to_dict(orient='records')
 
-
+# Insert the records
 for record in records:
     airport = Airport(**record)
-    session.add(airport)
-session.commit()
+    sessionObj.add(airport)
+    
+sessionObj.commit()
+
+liteEngine.dispose()
