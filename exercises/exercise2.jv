@@ -1,0 +1,73 @@
+valuetype IFOPTValidtype oftype text {
+	constraints: [
+		IFOPT_Format,
+	];
+}
+
+constraint IFOPT_Format oftype RegexConstraint {
+  regex: /[a-z]{2}:\d+:\d+(:\d+)?(:\d+)?/;
+}
+
+valuetype CoordinateRangetype oftype integer {
+    constraints: [CoordinateRange];
+}
+
+constraint CoordinateRange oftype RangeConstraint {
+    lowerBound: -90;
+    lowerBoundInclusive: true;
+    upperBound: 90;
+    upperBoundInclusive: true;
+}
+
+valuetype VerkherValidtype oftype text {
+    constraints: [VerkherValidList];
+}
+
+constraint VerkherValidList oftype AllowlistConstraint {
+  allowlist: ["FV", "RV", "nur DPN"];
+}
+
+
+
+pipeline TrainStopsPipeline {
+
+
+	block TrainStopsExtractor oftype HttpExtractor {
+		url: "https://download-data.deutschebahn.com/static/datasets/haltestellen/D_Bahnhof_2020_alle.CSV";
+	}
+
+
+	block TrainStopsInterpreter oftype TextFileInterpreter {
+
+    }
+
+	block TrainStopsCSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+
+	block TrainStopsTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "EVA_NR" oftype integer,
+            "DS100" oftype text,
+            "IFOPT" oftype IFOPTValidtype,
+            "NAME" oftype text,
+            "Verkher" oftype VerkherValidtype,
+            "Laenge" oftype CoordinateRangetype,
+            "Breite" oftype CoordinateRangetype,
+            "Betreiber_Name" oftype text,
+            "Betreiber_Nr" oftype integer,
+        ];
+    }
+
+	block TrainStopsLoader oftype SQLiteLoader {
+		table: "trainstops";
+		file: "./trainstops.sqlite";
+	}
+
+    TrainStopsExtractor
+		-> TrainStopsInterpreter
+		-> TrainStopsCSVInterpreter
+		-> TrainStopsTableInterpreter
+        -> TrainStopsLoader;
+}
