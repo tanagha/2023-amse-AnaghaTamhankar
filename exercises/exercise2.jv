@@ -1,62 +1,80 @@
+
+// get valid IFOPT data type
 valuetype IFOPTValidtype oftype text {
-	constraints: [
-		IFOPT_Format,
-	];
+	constraints: [IFOPT_Format, NotEmptyText];
 }
 
 constraint IFOPT_Format oftype RegexConstraint {
-  regex: /[a-z]{2}:\d+:\d+(:\d+)?(:\d+)?/;
+    regex: /[a-z]{2}:\d+:\d+(:\d+)?/;
 }
 
-valuetype CoordinateRangetype oftype integer {
+// get coordinate data type 
+valuetype Coordinatetype oftype decimal {
     constraints: [CoordinateRange];
 }
 
 constraint CoordinateRange oftype RangeConstraint {
     lowerBound: -90;
-    lowerBoundInclusive: true;
     upperBound: 90;
-    upperBoundInclusive: true;
 }
 
-valuetype VerkherValidtype oftype text {
-    constraints: [VerkherValidList];
+// get Verkehr data type 
+valuetype VerkehrValidtype oftype text {
+    constraints: [VerkehrValidList, NotEmptyText];
 }
 
-constraint VerkherValidList oftype AllowlistConstraint {
+constraint VerkehrValidList oftype AllowlistConstraint {
   allowlist: ["FV", "RV", "nur DPN"];
 }
 
+// Empty Text 
+valuetype TextValidtype oftype text {
+    constraints: [NotEmptyText];
+}
 
+constraint NotEmptyText oftype DenylistConstraint {
+  denylist: [""];
+}
 
+// Empty Integer
+valuetype IntegerValidtype oftype integer {
+    constraints: [NotEmptyInteger];
+}
+constraint NotEmptyInteger oftype RangeConstraint {
+    lowerBound: -1000000000;
+    upperBound: 1000000000;
+}
+
+// Pipeline for the trainstop dataset
 pipeline TrainStopsPipeline {
-
 
 	block TrainStopsExtractor oftype HttpExtractor {
 		url: "https://download-data.deutschebahn.com/static/datasets/haltestellen/D_Bahnhof_2020_alle.CSV";
 	}
 
-
 	block TrainStopsInterpreter oftype TextFileInterpreter {
-
     }
 
 	block TrainStopsCSVInterpreter oftype CSVInterpreter {
         delimiter: ";";
     }
 
+    block StatusColumnDeleter oftype ColumnDeleter {
+        delete: [column J];
+        }
+
 	block TrainStopsTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "EVA_NR" oftype integer,
-            "DS100" oftype text,
+            "EVA_NR" oftype IntegerValidtype,
+            "DS100" oftype TextValidtype,
             "IFOPT" oftype IFOPTValidtype,
-            "NAME" oftype text,
-            "Verkher" oftype VerkherValidtype,
-            "Laenge" oftype CoordinateRangetype,
-            "Breite" oftype CoordinateRangetype,
-            "Betreiber_Name" oftype text,
-            "Betreiber_Nr" oftype integer,
+            "NAME" oftype TextValidtype,
+            "Verkehr" oftype VerkehrValidtype,
+            "Laenge" oftype Coordinatetype,
+            "Breite" oftype Coordinatetype,
+            "Betreiber_Name" oftype TextValidtype,
+            "Betreiber_Nr" oftype IntegerValidtype,
         ];
     }
 
@@ -68,6 +86,7 @@ pipeline TrainStopsPipeline {
     TrainStopsExtractor
 		-> TrainStopsInterpreter
 		-> TrainStopsCSVInterpreter
+        -> StatusColumnDeleter
 		-> TrainStopsTableInterpreter
         -> TrainStopsLoader;
 }
