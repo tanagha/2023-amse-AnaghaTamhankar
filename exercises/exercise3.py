@@ -12,6 +12,7 @@ data = pd.read_csv(url, encoding="latin1", skiprows=7, skipfooter=4, engine="pyt
 data.columns = col_names
 
 # Validate the name and CIN column
+data['date'] = data['date'].astype(str)
 data['CIN'] = data['CIN'].astype(str).str.zfill(5)
 data['name'] = data['name'].astype(str)
 
