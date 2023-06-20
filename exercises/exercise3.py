@@ -17,7 +17,7 @@ data['CIN'] = data['CIN'].astype(str).str.zfill(5)
 data['name'] = data['name'].astype(str)
 
 # Get all the numeric values 
-data[['petrol', 'diesel', 'gas', 'electro', 'hybrid', 'plugInHybrid', 'others']]  = data[['petrol', 'diesel', 'gas', 'electro', 'hybrid', 'plugInHybrid', 'others']].apply(pd.to_numeric, errors='coerce')
+data[['petrol', 'diesel', 'gas', 'electro', 'hybrid', 'plugInHybrid', 'others']]  = data[['petrol', 'diesel', 'gas', 'electro', 'hybrid', 'plugInHybrid', 'others']].apply(pd.to_numeric, errors='coerce').convert_dtypes(convert_integer=True)
 data.dropna(axis=0,inplace=True)
 
 
