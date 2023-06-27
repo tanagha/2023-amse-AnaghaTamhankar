@@ -2,14 +2,10 @@
 
 ## Summary
 <!-- Describe your data science project in max. 5 sentences. -->
-To increase traffic efficiency and safety, this data science project will examine Cologne's traffic violations and light positions. We can pinpoint regions with a high number of violations and look into possible changes in traffic signal layout by merging reported fines data from the year 2021(past datasets are also available from 2015 but for now we are only using 2021) with the dataset of traffic lights in Cologne. Data integration, exploratory data analysis, and the creation of conclusions and suggestions are all parts of the project.
-
+The relationship between the traffic lights and trafic volations can be understood by merging reported fines data from the year 2021(past datasets are also available from 2015 but for now we are only using first 3 months of 2021) with the dataset of traffic lights in Cologne.
 ## Rationale
 <!-- Outline the impact of the analysis, e.g. which pains it solves. -->
-The following concerns are addressed in this analysis:
-1. Determine high-traffic locations so that you can concentrate your enforcement efforts there and increase road safety.
-2. To evaluate the effectiveness of traffic signal placement, look at the relationship between the occurrence of infractions and the presence of traffic lights.
-3. Find potential locations for the installation of extra traffic lights to improve traffic flow and decrease infractions.
+To evaluate the effectiveness of traffic signal placement, look at the relationship between the occurrence of violations and the presence of traffic lights.
 The project intends to deliver practical insights that may be utilized to make data-driven decisions for enhancing traffic management and safety in Cologne by merging the information and doing a thorough analysis.
 
 ## Datasources
@@ -18,7 +14,7 @@ The project intends to deliver practical insights that may be utilized to make d
 ### Datasource5645705113511462355: Ampelanlagen Koeln (Traffic lights in Cologne)
 * Metadata URL: https://mobilithek.info/offers/-5645705113511462355
 * Data URL: https://offenedaten-koeln.de/sites/default/files/2023_LSA_Koeln.csv
-            https://offenedaten-koeln.de/sites/default/files/20181116_LSA_Ko%25CC%2588ln.csv
+            https://offenedaten-koeln.de/sites/default/files/20181116_LSA_Ko%CC%88ln.csv
             https://offenedaten-koeln.de/sites/default/files/20131118_lsa_koordinaten_wgs84.csv
 * Data Type: CSV
 
@@ -42,9 +38,9 @@ Recorded fines from 2021, including by date, street, vehicle type and offense.
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
     [Issue #1] Obtain and preprocess the dataset on fines with the dataset of traffic lights in Cologne.
     [Issue #2] Handle inconsistent or missing data to ensure data quality and suitability for additional analysis.
-    [Issue #3] Conduct descriptive statistics and visualizations.
-    [Issue #4] Examine the connection between the frequency of crimes and the presence of traffic signals.
-    [Issue #5] Find out where there are a lot of infractions happening, then evaluate how well the traffic lights that are already there are working there.
-    [Issue #6] Make suggestions for concentrated enforcement measures, possible changes to traffic signal locations, and locations where more traffic lights could be useful.
+    [Issue #3] Merge both the datasets for further use. 
+    [Issue #4] Perform exploratory data analysis on the final dataset.
+    [Issue #5] Perform hypothesis testing.
+    [Issue #6] Write report on the findings. 
 
 [i1]: https://github.com/jvalue/2023-amse-template/issues/1
