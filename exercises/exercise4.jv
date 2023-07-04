@@ -1,3 +1,5 @@
+
+// Validate the id using idType
 valuetype idType oftype integer {
 	constraints: [idConstraint];
 }
@@ -5,38 +7,45 @@ constraint idConstraint oftype RangeConstraint {
   lowerBound: 0;
 }
 
-
-
-
+// Start the pipeline 
 pipeline BatteryTempPipeline {
 
+    // Download and unzip data
     block BatteryTempExtractor oftype HttpExtractor {
 		url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
 	}
+
     block zipArchiveInterpreter oftype ArchiveInterpreter {
 		archiveType: "zip";
 	}
+
     block dataFilePickler oftype FilePicker {
 		path: "/data.csv";
 	}
+
     block textFileInterpreter oftype TextFileInterpreter {
 
     }
+
     block csvInterpreter oftype CSVInterpreter {
         delimiter: ";";
     }
+
+    // Reshape data  
     block TemperaturColumnWriter oftype CellWriter {
         at: cell E1;
         write: ["Temperatur"];
     }
+
     block BatterietemperaturColumnWriter oftype CellWriter {
         at: cell J1;
         write: ["Batterietemperatur"];
     }
+
     block columnDeleter oftype ColumnDeleter {
     delete: [column F, column G, column H,column I, column L, column M, column N, column O, column P];
     }
-
+    
     block BatteryTempTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
@@ -50,6 +59,7 @@ pipeline BatteryTempPipeline {
         ];
     }
     
+    // Transform data
     block TemperaturTransformer oftype TableTransformer {
 		inputColumn: "Temperatur";
 		outputColumn: "Temperatur";
@@ -68,6 +78,8 @@ pipeline BatteryTempPipeline {
         tempKelvin: (tempCelsius * 9/5) + 32;
     }
 
+
+    // Load the data
     block BatteryTempLoader oftype SQLiteLoader {
 		table: "temperatures";
 		file: "./temperatures.sqlite";
