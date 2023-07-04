@@ -1,0 +1,88 @@
+valuetype idType oftype integer {
+	constraints: [idConstraint];
+}
+constraint idConstraint oftype RangeConstraint {
+  lowerBound: 0;
+}
+
+
+
+
+pipeline BatteryTempPipeline {
+
+    block BatteryTempExtractor oftype HttpExtractor {
+		url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
+	}
+    block zipArchiveInterpreter oftype ArchiveInterpreter {
+		archiveType: "zip";
+	}
+    block dataFilePickler oftype FilePicker {
+		path: "/data.csv";
+	}
+    block textFileInterpreter oftype TextFileInterpreter {
+
+    }
+    block csvInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+    block TemperaturColumnWriter oftype CellWriter {
+        at: cell E1;
+        write: ["Temperatur"];
+    }
+    block BatterietemperaturColumnWriter oftype CellWriter {
+        at: cell J1;
+        write: ["Batterietemperatur"];
+    }
+    block columnDeleter oftype ColumnDeleter {
+    delete: [column F, column G, column H,column I, column L, column M, column N, column O, column P];
+    }
+
+    block BatteryTempTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "Geraet" oftype idType,
+            "Hersteller" oftype text,
+            "Model" oftype text,
+            "Monat" oftype integer,
+            "Temperatur" oftype decimal,
+            "Batterietemperatur" oftype decimal,
+            "Geraet aktiv" oftype text,
+        ];
+    }
+    
+    block TemperaturTransformer oftype TableTransformer {
+		inputColumn: "Temperatur";
+		outputColumn: "Temperatur";
+		use: CelsiusToKelvin;
+	}
+     block BatterietemperaturTransformer oftype TableTransformer {
+        inputColumn: "Batterietemperatur";
+        outputColumn: "Batterietemperatur";
+		use: CelsiusToKelvin;
+	}
+
+	transform CelsiusToKelvin {
+        from tempCelsius oftype decimal;
+        to tempKelvin oftype decimal;
+        tempKelvin: tempCelsius + 273.15;
+    }
+
+    block BatteryTempLoader oftype SQLiteLoader {
+		table: "temperatures";
+		file: "./temperatures.sqlite";
+	}
+
+    BatteryTempExtractor
+        -> zipArchiveInterpreter
+        -> dataFilePickler
+        -> textFileInterpreter
+        -> csvInterpreter
+        -> TemperaturColumnWriter
+        -> BatterietemperaturColumnWriter
+        -> columnDeleter
+        -> BatteryTempTableInterpreter
+        -> TemperaturTransformer
+        -> BatterietemperaturTransformer
+        -> BatteryTempLoader;
+
+}
