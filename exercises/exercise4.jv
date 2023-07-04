@@ -55,6 +55,7 @@ pipeline BatteryTempPipeline {
 		outputColumn: "Temperatur";
 		use: CelsiusToKelvin;
 	}
+
      block BatterietemperaturTransformer oftype TableTransformer {
         inputColumn: "Batterietemperatur";
         outputColumn: "Batterietemperatur";
@@ -64,7 +65,7 @@ pipeline BatteryTempPipeline {
 	transform CelsiusToKelvin {
         from tempCelsius oftype decimal;
         to tempKelvin oftype decimal;
-        tempKelvin: tempCelsius + 273.15;
+        tempKelvin: (tempCelsius * 9/5) + 32;
     }
 
     block BatteryTempLoader oftype SQLiteLoader {
