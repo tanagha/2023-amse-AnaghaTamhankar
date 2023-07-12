@@ -8,7 +8,7 @@ import sqlite3
 # Fetch the data
 url = ' https://gtfs.rhoenenergie-bus.de/GTFS.zip'
 filename = 'GTFS.zip'
-d =urlretrieve(url, filename)
+urlretrieve(url, filename)
 
 with zipfile.ZipFile("GTFS.zip") as zip:
     zip.extract("stops.txt")
